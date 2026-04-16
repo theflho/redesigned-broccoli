@@ -653,9 +653,20 @@ function initSpecs() {
           var match = text.trim().match(/[A-G]/i);
           if (!match) return;
           var letter = match[0].toUpperCase();
+          var activeBar = null;
           document.querySelectorAll('#' + wrapperId + ' .' + barClass).forEach(function(bar) {
-              bar.classList.toggle('active', bar.getAttribute('data-letter') === letter);
+              var isActive = bar.getAttribute('data-letter') === letter;
+              bar.classList.toggle('active', isActive);
+              if (isActive) activeBar = bar;
           });
+          if (activeBar) {
+              var dpeRow = document.getElementById(wrapperId).parentElement;
+              var valueEl = dpeRow.querySelector('.dpe-value');
+              if (valueEl) {
+                  var center = activeBar.offsetLeft + activeBar.offsetWidth / 2;
+                  valueEl.style.paddingLeft = Math.max(0, center - 6) + 'px';
+              }
+          }
       }
   
       var hasDpe = valDpe.textContent.trim().match(/[A-G]/i);
