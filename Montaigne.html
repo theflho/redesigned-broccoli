@@ -1,0 +1,802 @@
+<div class="page-bien-signature">
+    <div class="fiche-bien-unique">
+      <div class="retour-partager">
+        <a href="/#nos-biens" class="retour-discret">← CATALOGUE</a>
+        <button id="btn-partager" class="btn-partager" onclick="partagerPage()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span>Partager</span>
+        </button>
+      </div>
+  
+      <div class="grille-presentation">
+        <div class="bloc-contenu">
+          <div class="prix-haut">{{wf {"path":"price","type":"PlainText"} }} </div>
+          <div id="prix-m2" class="prix-m2-ligne"></div>
+          <h1 class="nom-propriete">{{wf {"path":"name","type":"PlainText"} }}</h1>
+          <div class="separateur-fin"></div>
+          <div class="details-techniques-haut">
+            <div class="spec-mini">SURFACE — <span id="val-area">{{wf {"path":"area","type":"PlainText"} }}</span> m²</div>
+            <div class="spec-mini">CHAMBRES — <span>{{wf {"path":"bed","type":"PlainText"} }}</span></div>
+          </div>
+          <div class="localisation-bas">
+            <span class="ville">{{wf {"path":"los-angeles","type":"PlainText"} }}</span> <span class="pays">/ FRANCE</span>
+          </div>
+        </div>
+        <div class="bloc-visuel">
+          <img src="{{wf {"path":"image2","type":"ImageRef"} }}" alt="Vue principale">
+          <button class="btn-voir-galerie" onclick="window.ouvrirGalerie && window.ouvrirGalerie()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span id="btn-galerie-label">Voir la galerie</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="details-bas-page">
+      <div class="colonne-gauche-editorial">
+        <div class="section-description">
+          <h2 class="titre-section">L'Esprit du Lieu</h2>
+          <div class="texte-description">
+            {{wf {"path":"description","type":"PlainText"} }}
+          </div>
+        </div>
+        <div class="section-galerie-edito">
+          <h2 class="titre-section">La Galerie</h2>
+          <div id="wrapper-carrousel-global"></div>
+        </div>
+      </div>
+  
+      <div class="colonne-droite-technique">
+        <div class="section-fiche">
+          <h2 class="titre-section">Détails</h2>
+          <div class="grille-specs-archi">
+            <div class="item-spec" id="spec-type">
+              <div class="label-cat">TYPE</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"renovate","type":"PlainText"} }}</span></div>
+            </div>
+            <div class="item-spec" id="spec-superficie">
+              <div class="label-cat">SUPERFICIE</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"area","type":"PlainText"} }}</span> m²</div>
+            </div>
+            <div class="item-spec" id="spec-chambre">
+              <div class="label-cat">CHAMBRE</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"bed","type":"PlainText"} }}</span></div>
+            </div>
+            <div class="item-spec" id="spec-sdb">
+              <div class="label-cat">SALLES DE BAIN</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"bathroom","type":"PlainText"} }}</span></div>
+            </div>
+            <div class="item-spec" id="spec-parking">
+              <div class="label-cat">PARKING / BOX</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"parking-box","type":"PlainText"} }}</span></div>
+            </div>
+            <div class="item-spec" id="spec-terrain">
+              <div class="label-cat">TERRAIN</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"terrain","type":"PlainText"} }}</span> m²</div>
+            </div>
+            <div class="item-spec" id="spec-taxe">
+              <div class="label-cat">TAXE FONCIÈRE</div>
+              <div class="valeur-spec"><span class="val-cms">{{wf {"path":"taxe-fonciere","type":"PlainText"} }}</span> €/an</div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="dpe-ademe">
+          <div class="dpe-row">
+            <div class="dpe-title">Performance énergétique</div>
+            <div class="dpe-scale" id="dpe-wrapper">
+              <div class="dpe-bar a" data-letter="A">A</div>
+              <div class="dpe-bar b" data-letter="B">B</div>
+              <div class="dpe-bar c" data-letter="C">C</div>
+              <div class="dpe-bar d" data-letter="D">D</div>
+              <div class="dpe-bar e" data-letter="E">E</div>
+              <div class="dpe-bar f" data-letter="F">F</div>
+              <div class="dpe-bar g" data-letter="G">G</div>
+            </div>
+            <span id="val-dpe" style="display:none">{{wf {"path":"note-dpe-3","type":"PlainText"} }}</span>
+            <div class="dpe-value">Consommation : <span>{{wf {"path":"classe-energie","type":"PlainText"} }}</span> kWh/m²/an</div>
+          </div>
+  
+          <div class="dpe-row">
+            <div class="dpe-title">Gaz à effet de serre</div>
+            <div class="ges-scale" id="ges-wrapper">
+              <div class="ges-bar a" data-letter="A">A</div>
+              <div class="ges-bar b" data-letter="B">B</div>
+              <div class="ges-bar c" data-letter="C">C</div>
+              <div class="ges-bar d" data-letter="D">D</div>
+              <div class="ges-bar e" data-letter="E">E</div>
+              <div class="ges-bar f" data-letter="F">F</div>
+              <div class="ges-bar g" data-letter="G">G</div>
+            </div>
+            <span id="val-ges" style="display:none">{{wf {"path":"notes-ges","type":"PlainText"} }}</span>
+            <div class="dpe-value">Émissions : <span>{{wf {"path":"consommation-ges","type":"PlainText"} }}</span> kgCO₂/m²/an</div>
+          </div>
+        </div>
+  
+        <div class="section-contact-integre">
+          <h2 class="titre-section">Nous contacter</h2>
+          <div class="agence-nom-contact">Montaigne Immobilier</div>
+          <div class="agence-adresse-contact">44 route de Darnétal — 76230 Bois-Guillaume</div>
+  
+          <div class="conseillers-liste">
+            <a href="tel:0679292019" class="conseiller-ligne">
+              <div class="conseiller-avatar">O</div>
+              <div class="conseiller-infos">
+                <div class="conseiller-prenom">Ophélie</div>
+                <div class="conseiller-tel">06 79 29 20 19</div>
+              </div>
+              <svg class="conseiller-icone" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </a>
+            <a href="tel:0660146996" class="conseiller-ligne">
+              <div class="conseiller-avatar">C</div>
+              <div class="conseiller-infos">
+                <div class="conseiller-prenom">Christophe</div>
+                <div class="conseiller-tel">06 60 14 69 96</div>
+              </div>
+              <svg class="conseiller-icone" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </a>
+          </div>
+  
+          <a href="mailto:contact@montaigne-immobilier.fr" class="btn-contact-email">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Envoyer un message
+          </a>
+  
+          <a href="https://www.georisques.gouv.fr" target="_blank" rel="noopener" class="btn-georisques">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Consulter les Géorisques
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;700&display=swap');
+  
+  /* --- BASE --- */
+  .page-bien-signature { background: #f9f7f2; width: 100%; padding-bottom: 100px; color: #1a1a1a; overflow-x: hidden; }
+  .fiche-bien-unique, .details-bas-page { width: 100%; max-width: 1800px; margin: 0 auto; padding: 60px 40px 0 40px; }
+  
+  /* --- RETOUR + PARTAGER --- */
+  .retour-partager {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+  }
+  .retour-discret { font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px; text-decoration: none; color: #1a1a1a; }
+  
+  .btn-partager {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: 1px solid #c5bba8;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+  }
+  .btn-partager:hover { background: #1a1a1a; color: #f9f7f2; border-color: #1a1a1a; }
+  
+  /* --- HERO --- */
+  .grille-presentation { display: flex; align-items: center; gap: 80px; }
+  .bloc-contenu { flex: 0 0 35%; }
+  .bloc-visuel { flex: 1; }
+  .bloc-visuel img { width: 100%; height: 82vh; object-fit: cover; object-position: center 20%; border-radius: 0; }
+  
+  /* --- TYPOS --- */
+  .prix-haut { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 28px; margin-bottom: 6px; color: #1a1a1a; }
+  
+  .prix-m2-ligne {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #5c5148;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+  }
+  
+  .nom-propriete { font-family: 'Playfair Display', serif; font-size: 64px; line-height: 1.1; font-style: italic; }
+  .separateur-fin { width: 80px; height: 1px; background: #c5bba8; margin: 40px 0; }
+  .details-techniques-haut, .localisation-bas { font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px; color: #1a1a1a; }
+  
+  /* --- LAYOUT BAS --- */
+  .details-bas-page { display: flex; gap: 100px; align-items: flex-start; margin-top: 80px; }
+  .colonne-gauche-editorial { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 60px; }
+  .colonne-droite-technique { flex: 0 0 420px; display: flex; flex-direction: column; gap: 50px; position: sticky; top: 40px; }
+  
+  .titre-section { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 30px; }
+  .texte-description { font-family: 'Montserrat', sans-serif; font-size: 16px; line-height: 2; font-weight: 400; color: #2a2a2a; text-align: justify; }
+  
+  /* --- BOUTON GALERIE SUR HERO --- */
+  .bloc-visuel { position: relative; }
+  .btn-voir-galerie {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: #1a1a1a;
+      border: none;
+      border-radius: 3px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 64px;
+  }
+  .btn-voir-galerie:hover { background: #333; }
+  .btn-voir-galerie svg { display: block; }
+  .btn-voir-galerie span {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+  }
+  
+  /* --- CARROUSEL GALERIE --- */
+  #wrapper-carrousel-global {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+  }
+  #wrapper-carrousel-global::before,
+  #wrapper-carrousel-global::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 5;
+      pointer-events: none;
+  }
+  #wrapper-carrousel-global::before {
+      left: 0;
+      background: linear-gradient(to right, #f9f7f2 10%, transparent 100%);
+  }
+  #wrapper-carrousel-global::after {
+      right: 0;
+      background: linear-gradient(to left, #f9f7f2 10%, transparent 100%);
+  }
+  
+  .liste-capsule-flux {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      background-color: transparent !important;
+      cursor: grab !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      user-select: none;
+      scroll-behavior: smooth;
+      padding: 4px 0 8px !important;
+  }
+  .liste-capsule-flux::-webkit-scrollbar { display: none !important; }
+  .liste-capsule-flux:active { cursor: grabbing !important; }
+  
+  .liste-capsule-flux .w-dyn-items {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 16px !important;
+      align-items: stretch !important;
+  }
+  
+  .liste-capsule-flux .w-dyn-item {
+      flex: 0 0 320px !important;
+      height: 460px !important;
+      cursor: pointer !important;
+  }
+  
+  .liste-capsule-flux .w-dyn-item a,
+  .liste-capsule-flux .w-dyn-item .w-lightbox {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      pointer-events: none !important;
+  }
+  
+  .img-capsule-luxe {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      border-radius: 4px !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      display: block !important;
+      pointer-events: none !important;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s ease !important;
+  }
+  .liste-capsule-flux .w-dyn-item:hover .img-capsule-luxe {
+      transform: scale(0.98) !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15) !important;
+  }
+  
+  .carrousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 36px;
+      height: 36px;
+      background: #1a1a1a;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #f9f7f2;
+      font-size: 14px;
+      font-family: Georgia, serif;
+      transition: background 0.2s, transform 0.2s;
+      user-select: none;
+      opacity: 0.75;
+  }
+  .carrousel-arrow:hover { background: #1a1a1a; opacity: 1; transform: translateY(-50%) scale(1.08); }
+  .carrousel-arrow-prev { left: 10px; }
+  .carrousel-arrow-next { right: 10px; }
+  
+  /* Lightbox */
+  #lb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,6,0.96);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+  }
+  #lb-overlay.active { display: flex; animation: lbFadeIn 0.35s ease; }
+  @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  
+  #lb-img {
+      max-width: 86vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 16px;
+      transition: opacity 0.2s ease;
+      display: block;
+      pointer-events: none;
+  }
+  #lb-img.fade { opacity: 0; }
+  
+  #lb-close {
+      position: absolute;
+      top: 24px; right: 32px;
+      background: none; border: none; outline: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 42px;
+      font-weight: 200;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+  }
+  #lb-close:hover { color: #fff; }
+  
+  #lb-prev-btn, #lb-next-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; outline: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 36px;
+      cursor: pointer;
+      padding: 20px;
+      font-family: Georgia, serif;
+      transition: color 0.25s;
+  }
+  #lb-prev-btn { left: 20px; }
+  #lb-next-btn { right: 20px; }
+  #lb-prev-btn:hover, #lb-next-btn:hover { color: #fff; }
+  
+  #lb-counter {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.3);
+      font-size: 11px;
+      letter-spacing: 4px;
+      font-family: Georgia, serif;
+  }
+  
+  /* --- SPECS --- */
+  .grille-specs-archi { display: flex; flex-direction: column; border-top: 1px solid #c5bba8; }
+  .item-spec { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 0; border-bottom: 1px solid #e8e3da; }
+  .label-cat { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: #5c5148; }
+  .valeur-spec { font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; color: #1a1a1a; text-align: right; }
+  
+  /* --- DPE & GES --- */
+  .dpe-ademe { display: flex; flex-direction: column; gap: 20px; }
+  .dpe-row { background: #fff; padding: 28px 28px 22px; border-left: 3px solid #c5bba8; border-radius: 0 4px 4px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
+  .dpe-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: #5c5148; margin-bottom: 18px; }
+  .dpe-scale, .ges-scale { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 12px 0; }
+  .dpe-bar, .ges-bar { padding: 11px 0; text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; border-radius: 3px; color: #fff; opacity: 0.18; transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; position: relative; }
+  .dpe-bar.a { background: #00a06d; } .dpe-bar.b { background: #52b153; } .dpe-bar.c { background: #a5cb74; } .dpe-bar.d { background: #f4e70f; } .dpe-bar.e { background: #f0b50f; } .dpe-bar.f { background: #eb8235; } .dpe-bar.g { background: #d7221f; }
+  .ges-bar.a { background: #a4dbf8; } .ges-bar.b { background: #8cb4d3; } .ges-bar.c { background: #7792b1; } .ges-bar.d { background: #606f8f; } .ges-bar.e { background: #4d5271; } .ges-bar.f { background: #393551; } .ges-bar.g { background: #281b35; }
+  .dpe-bar.active, .ges-bar.active { opacity: 1; transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+  .dpe-bar.active::after, .ges-bar.active::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #1a1a1a; }
+  .dpe-value { margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 11px; color: #5c5148; letter-spacing: 0.05em; padding-top: 14px; border-top: 1px solid #f0ece5; }
+  .dpe-value span { font-weight: 700; color: #1a1a1a; font-size: 13px; }
+  
+  /* --- BIENS SIMILAIRES --- */
+  .section-similaires {
+      background: #f0ece5;
+      padding: 80px 40px;
+      margin-top: 80px;
+  }
+  .similaires-inner {
+      max-width: 1800px;
+      margin: 0 auto;
+  }
+  .similaires-grille {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 10px;
+  }
+  
+  .carte-similaire {
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #1a1a1a;
+      display: block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .carte-similaire:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+  .carte-similaire img { width: 100%; height: 220px; object-fit: cover; display: block; }
+  .carte-similaire-infos { padding: 24px; }
+  .carte-similaire-prix { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .carte-similaire-nom { font-family: 'Playfair Display', serif; font-size: 20px; font-style: italic; line-height: 1.3; }
+  .carte-similaire-specs { font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #5c5148; margin-top: 12px; }
+  
+  /* --- CONTACT INTÉGRÉ --- */
+  .section-contact-integre {
+      background: #fff;
+      border-left: 3px solid #c5bba8;
+      border-radius: 0 4px 4px 0;
+      padding: 32px 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  
+  .agence-nom-contact {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-style: italic;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+  }
+  
+  .agence-adresse-contact {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #5c5148;
+      margin-bottom: 28px;
+  }
+  
+  .conseillers-liste {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 22px;
+  }
+  
+  .conseiller-ligne {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 3px;
+      text-decoration: none;
+      color: #1a1a1a;
+      background: #f9f7f2;
+      transition: background 0.2s;
+  }
+  .conseiller-ligne:hover { background: #f0ece5; }
+  
+  .conseiller-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #c5bba8;
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+  }
+  
+  .conseiller-infos { flex: 1; }
+  
+  .conseiller-prenom {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+  }
+  
+  .conseiller-tel {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      color: #5c5148;
+      margin-top: 3px;
+  }
+  
+  .conseiller-icone { color: #c5bba8; flex-shrink: 0; }
+  
+  .btn-contact-email {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #f9f7f2;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+  }
+  .btn-contact-email:hover { background: #333; }
+  
+  .btn-georisques {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      background: none;
+      border: 1px solid #c5bba8;
+      color: #5c5148;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+      box-sizing: border-box;
+  }
+  .btn-georisques:hover { border-color: #1a1a1a; color: #1a1a1a; }
+  
+  /* --- MOBILE --- */
+  @media (max-width: 991px) {
+      .details-bas-page, .grille-presentation { flex-direction: column; }
+      .colonne-droite-technique { width: 100%; position: relative; flex: none; }
+      .nom-propriete { font-size: 40px; }
+      .similaires-grille { grid-template-columns: 1fr; }
+      .liste-capsule-flux .w-dyn-item { flex: 0 0 180px !important; height: 260px !important; }
+      #lb-prev-btn { left: 4px; }
+      #lb-next-btn { right: 4px; }
+      #lb-img { max-width: 94vw; max-height: 75vh; }
+  }
+  </style>
+  
+  <script>
+  /* --- SPECS CONDITIONNELLES --- */
+function initSpecs() {
+    document.querySelectorAll('.item-spec').forEach(function(row) {
+        var span = row.querySelector('.val-cms');
+        if (span && !span.textContent.trim()) {
+            row.style.display = 'none';
+        }
+    });
+}
+
+/* --- PRIX AU M² --- */
+  function calcPrixM2() {
+      var prixEl  = document.querySelector('.prix-haut');
+      var areaEl  = document.getElementById('val-area');
+      var affEl   = document.getElementById('prix-m2');
+      if (!prixEl || !areaEl || !affEl) return;
+  
+      var prixNum = prixEl.textContent.replace(/[^\d]/g, '');
+      var areaNum = areaEl.textContent.replace(/[^\d]/g, '');
+  
+      if (prixNum && areaNum && parseInt(areaNum) > 0) {
+          var m2 = Math.round(parseInt(prixNum) / parseInt(areaNum));
+          affEl.textContent = m2.toLocaleString('fr-FR') + ' €/m²';
+      }
+  }
+  
+  /* --- DPE --- */
+  function initDPE() {
+      var valDpe = document.getElementById('val-dpe');
+      var valGes = document.getElementById('val-ges');
+      if (!valDpe || !valGes) { setTimeout(initDPE, 200); return; }
+  
+      function highlightBar(spanEl, wrapperId, barClass) {
+          var text  = spanEl.textContent || spanEl.innerText || '';
+          var match = text.trim().match(/[A-G]/i);
+          if (!match) return;
+          var letter = match[0].toUpperCase();
+          document.querySelectorAll('#' + wrapperId + ' .' + barClass).forEach(function(bar) {
+              bar.classList.toggle('active', bar.getAttribute('data-letter') === letter);
+          });
+      }
+  
+      highlightBar(valDpe, 'dpe-wrapper', 'dpe-bar');
+      highlightBar(valGes, 'ges-wrapper', 'ges-bar');
+  }
+  
+  /* --- PARTAGER --- */
+  function partagerPage() {
+      var url   = window.location.href;
+      var titre = document.querySelector('.nom-propriete');
+      var nom   = titre ? titre.textContent.trim() : document.title;
+      var btn   = document.getElementById('btn-partager');
+  
+      if (navigator.share) {
+          navigator.share({ title: nom, url: url });
+      } else {
+          navigator.clipboard.writeText(url).then(function() {
+              var span = btn.querySelector('span');
+              var orig = span.textContent;
+              span.textContent = 'Lien copié !';
+              setTimeout(function() { span.textContent = orig; }, 2000);
+          });
+      }
+  }
+  
+  /* --- CARROUSEL GALERIE --- */
+  function initCarousel() {
+      var wrapper = document.getElementById('wrapper-carrousel-global');
+      var slider  = document.querySelector('.liste-capsule-flux');
+      if (!wrapper || !slider) { setTimeout(initCarousel, 300); return; }
+  
+      /* Déplace la Collection List Webflow dans le wrapper si besoin */
+      if (slider.parentNode !== wrapper) {
+          wrapper.appendChild(slider);
+      }
+  
+      /* Flèches absolues */
+      var prevBtn = document.createElement('div');
+      prevBtn.className = 'carrousel-arrow carrousel-arrow-prev';
+      prevBtn.innerHTML = '&#8592;';
+      var nextBtn = document.createElement('div');
+      nextBtn.className = 'carrousel-arrow carrousel-arrow-next';
+      nextBtn.innerHTML = '&#8594;';
+      wrapper.appendChild(prevBtn);
+      wrapper.appendChild(nextBtn);
+  
+      prevBtn.addEventListener('click', function() { slider.scrollBy({ left: -300, behavior: 'smooth' }); });
+      nextBtn.addEventListener('click', function() { slider.scrollBy({ left:  300, behavior: 'smooth' }); });
+  
+      /* Drag to scroll */
+      var isDown = false, isDragging = false, startX, scrollLeft;
+      slider.addEventListener('mousedown', function(e) {
+          isDown = true; isDragging = false;
+          startX = e.pageX - slider.offsetLeft;
+          scrollLeft = slider.scrollLeft;
+          slider.style.scrollBehavior = 'auto';
+      });
+      slider.addEventListener('mouseleave', function() { isDown = false; });
+      slider.addEventListener('mouseup',    function() { isDown = false; slider.style.scrollBehavior = 'smooth'; });
+      slider.addEventListener('mousemove',  function(e) {
+          if (!isDown) return;
+          e.preventDefault();
+          var walk = (e.pageX - slider.offsetLeft - startX) * 2;
+          if (Math.abs(walk) > 5) isDragging = true;
+          slider.scrollLeft = scrollLeft - walk;
+      });
+  
+      /* Lightbox */
+      var overlay = document.createElement('div');
+      overlay.id = 'lb-overlay';
+      overlay.innerHTML =
+          '<button id="lb-close">&times;</button>' +
+          '<button id="lb-prev-btn">&#8592;</button>' +
+          '<img id="lb-img" src="" alt="">' +
+          '<button id="lb-next-btn">&#8594;</button>' +
+          '<div id="lb-counter"></div>';
+      document.body.appendChild(overlay);
+  
+      var lbImg = document.getElementById('lb-img');
+      var lbCounter = document.getElementById('lb-counter');
+      var currentIndex = 0;
+  
+      function getImgSrc(img) {
+          return img.currentSrc || img.src ||
+                 (img.srcset ? img.srcset.split(',')[0].trim().split(' ')[0] : '') || '';
+      }
+      function getItems() {
+          return Array.from(document.querySelectorAll('.liste-capsule-flux .w-dyn-item'));
+      }
+      function showImage(index) {
+          var items = getItems();
+          currentIndex = (index + items.length) % items.length;
+          lbImg.classList.add('fade');
+          setTimeout(function() {
+              var img = items[currentIndex].querySelector('img');
+              lbImg.src = img ? getImgSrc(img) : '';
+              lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
+              lbImg.classList.remove('fade');
+          }, 180);
+      }
+      function openLightbox(index) {
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          showImage(index);
+      }
+      window.ouvrirGalerie = function() { openLightbox(0); };
+      function closeLightbox() {
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+      }
+  
+      function attachClicks() {
+          var items = getItems();
+          if (items.length === 0) { setTimeout(attachClicks, 300); return; }
+          var label = document.getElementById('btn-galerie-label');
+          if (label && items.length > 0) label.textContent = items.length + ' photos';
+          items.forEach(function(item, index) {
+              item.addEventListener('click', function(e) {
+                  if (isDragging) return;
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+                  openLightbox(index);
+              }, true);
+          });
+      }
+      attachClicks();
+  
+      document.getElementById('lb-close').addEventListener('click', closeLightbox);
+      document.getElementById('lb-prev-btn').addEventListener('click', function() { showImage(currentIndex - 1); });
+      document.getElementById('lb-next-btn').addEventListener('click', function() { showImage(currentIndex + 1); });
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLightbox(); });
+      document.addEventListener('keydown', function(e) {
+          if (!overlay.classList.contains('active')) return;
+          if (e.key === 'ArrowLeft')  showImage(currentIndex - 1);
+          if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+          if (e.key === 'Escape')     closeLightbox();
+      });
+  }
+  
+  /* --- INIT --- */
+  if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+          calcPrixM2();
+          initDPE();
+          initCarousel();
+          initSpecs();
+      });
+  } else {
+      calcPrixM2();
+      initDPE();
+      initCarousel();
+      initSpecs();
+  }
+  </script>
