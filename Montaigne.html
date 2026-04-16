@@ -211,7 +211,7 @@
   /* --- LAYOUT BAS --- */
   .details-bas-page { display: flex; gap: 100px; align-items: flex-start; margin-top: 80px; }
   .colonne-gauche-editorial { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 60px; }
-  .colonne-droite-technique { flex: 0 0 420px; display: flex; flex-direction: column; gap: 50px; position: sticky; top: 40px; }
+  .colonne-droite-technique { flex: 0 0 420px; display: flex; flex-direction: column; gap: 50px; position: sticky; top: 40px; max-height: calc(100vh - 80px); overflow-y: auto; }
   
   .titre-section { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 30px; }
   .texte-description { font-family: 'Montserrat', sans-serif; font-size: 16px; line-height: 2; font-weight: 400; color: #2a2a2a; text-align: justify; }
@@ -427,7 +427,7 @@
   .dpe-row { background: #fff; padding: 28px 28px 22px; border-left: 3px solid #c5bba8; border-radius: 0 4px 4px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.04); }
   .dpe-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: #5c5148; margin-bottom: 18px; }
   .dpe-scale, .ges-scale { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 12px 0; }
-  .dpe-bar, .ges-bar { padding: 11px 0; text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; border-radius: 3px; color: #fff; opacity: 0.18; transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; position: relative; }
+  .dpe-bar, .ges-bar { padding: 11px 0; text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; border-radius: 3px; color: #fff; opacity: 0.38; transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease; position: relative; }
   .dpe-bar.a { background: #00a06d; } .dpe-bar.b { background: #52b153; } .dpe-bar.c { background: #a5cb74; } .dpe-bar.d { background: #f4e70f; } .dpe-bar.e { background: #f0b50f; } .dpe-bar.f { background: #eb8235; } .dpe-bar.g { background: #d7221f; }
   .ges-bar.a { background: #a4dbf8; } .ges-bar.b { background: #8cb4d3; } .ges-bar.c { background: #7792b1; } .ges-bar.d { background: #606f8f; } .ges-bar.e { background: #4d5271; } .ges-bar.f { background: #393551; } .ges-bar.g { background: #281b35; }
   .dpe-bar.active, .ges-bar.active { opacity: 1; transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
@@ -592,16 +592,22 @@
   }
   .btn-georisques:hover { border-color: #1a1a1a; color: #1a1a1a; }
   
+  /* --- TABLETTE --- */
+  @media (min-width: 992px) and (max-width: 1200px) {
+      .nom-propriete { font-size: 46px; }
+  }
+
   /* --- MOBILE --- */
   @media (max-width: 991px) {
       .details-bas-page, .grille-presentation { flex-direction: column; }
-      .colonne-droite-technique { width: 100%; position: relative; flex: none; }
+      .colonne-droite-technique { width: 100%; position: relative; flex: none; max-height: none; overflow-y: visible; }
       .nom-propriete { font-size: 40px; }
       .similaires-grille { grid-template-columns: 1fr; }
       .liste-capsule-flux .w-dyn-item { flex: 0 0 180px !important; height: 260px !important; }
       #lb-prev-btn { left: 4px; }
       #lb-next-btn { right: 4px; }
       #lb-img { max-width: 94vw; max-height: 75vh; }
+      .bloc-visuel img { height: 52vh; }
   }
   </style>
   
@@ -625,7 +631,11 @@ function initSpecs() {
   
       var prixNum = prixEl.textContent.replace(/[^\d]/g, '');
       var areaNum = areaEl.textContent.replace(/[^\d]/g, '');
-  
+
+      if (prixNum) {
+          prixEl.textContent = parseInt(prixNum).toLocaleString('fr-FR') + ' €';
+      }
+
       if (prixNum && areaNum && parseInt(areaNum) > 0) {
           var m2 = Math.round(parseInt(prixNum) / parseInt(areaNum));
           affEl.textContent = m2.toLocaleString('fr-FR') + ' €/m²';
@@ -648,6 +658,15 @@ function initSpecs() {
           });
       }
   
+      var hasDpe = valDpe.textContent.trim().match(/[A-G]/i);
+      var hasGes = valGes.textContent.trim().match(/[A-G]/i);
+
+      if (!hasDpe && !hasGes) {
+          var bloc = document.querySelector('.dpe-ademe');
+          if (bloc) bloc.style.display = 'none';
+          return;
+      }
+
       highlightBar(valDpe, 'dpe-wrapper', 'dpe-bar');
       highlightBar(valGes, 'ges-wrapper', 'ges-bar');
   }
