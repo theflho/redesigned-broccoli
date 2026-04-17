@@ -787,11 +787,14 @@ function initSpecs() {
           var items = getItems();
           currentIndex = (index + items.length) % items.length;
           lbImg.classList.add('fade');
+          lbImg.src = '';
+          lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
           setTimeout(function() {
               var img = items[currentIndex].querySelector('img');
-              lbImg.src = img ? getImgSrc(img) : '';
-              lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
-              lbImg.classList.remove('fade');
+              var newSrc = img ? getImgSrc(img) : '';
+              lbImg.onload = function() { lbImg.classList.remove('fade'); lbImg.onload = null; };
+              lbImg.onerror = function() { lbImg.classList.remove('fade'); lbImg.onerror = null; };
+              lbImg.src = newSrc;
           }, 180);
       }
       var lbScrollY = 0;
