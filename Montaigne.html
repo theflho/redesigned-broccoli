@@ -786,16 +786,25 @@ function initSpecs() {
       function showImage(index) {
           var items = getItems();
           currentIndex = (index + items.length) % items.length;
-          lbImg.classList.add('fade');
-          lbImg.src = '';
           lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
-          setTimeout(function() {
-              var img = items[currentIndex].querySelector('img');
-              var newSrc = img ? getImgSrc(img) : '';
-              lbImg.onload = function() { lbImg.classList.remove('fade'); lbImg.onload = null; };
-              lbImg.onerror = function() { lbImg.classList.remove('fade'); lbImg.onerror = null; };
+          var img = items[currentIndex].querySelector('img');
+          var newSrc = img ? getImgSrc(img) : '';
+
+          /* Précharger en parallèle du fondu sortant */
+          var loaded = false, faded = false;
+          function trySwap() {
+              if (!loaded || !faded) return;
               lbImg.src = newSrc;
-          }, 180);
+              lbImg.classList.remove('fade');
+          }
+
+          var pre = new Image();
+          pre.onload = pre.onerror = function() { loaded = true; trySwap(); };
+          pre.src = newSrc;
+          if (pre.complete) { loaded = true; }
+
+          lbImg.classList.add('fade');
+          setTimeout(function() { faded = true; trySwap(); }, 160);
       }
       var lbScrollY = 0;
       function openLightbox(index) {
