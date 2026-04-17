@@ -611,8 +611,7 @@
       .nom-propriete { font-size: 40px; }
       .similaires-grille { grid-template-columns: 1fr; }
       .liste-capsule-flux .w-dyn-item { flex: 0 0 180px !important; height: 260px !important; }
-      #lb-prev-btn { left: 4px; }
-      #lb-next-btn { right: 4px; }
+      #lb-prev-btn, #lb-next-btn { display: none !important; }
       #lb-img { max-width: 94vw; max-height: 75vh; }
       .bloc-visuel img { height: 52vh; }
   }
@@ -801,8 +800,7 @@ function initSpecs() {
           overlay.classList.add('active');
           showImage(index);
       }
-      function isTouchDevice() { return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); }
-      window.ouvrirGalerie = function() { if (!isTouchDevice()) openLightbox(0); };
+      window.ouvrirGalerie = function() { openLightbox(0); };
       function closeLightbox() {
           overlay.classList.remove('active');
           document.body.classList.remove('lb-open');
@@ -819,7 +817,6 @@ function initSpecs() {
           items.forEach(function(item, index) {
               item.addEventListener('click', function(e) {
                   if (isDragging) return;
-                  if (isTouchDevice()) return;
                   e.preventDefault();
                   e.stopImmediatePropagation();
                   openLightbox(index);
@@ -832,6 +829,21 @@ function initSpecs() {
       document.getElementById('lb-prev-btn').addEventListener('click', function() { showImage(currentIndex - 1); });
       document.getElementById('lb-next-btn').addEventListener('click', function() { showImage(currentIndex + 1); });
       overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLightbox(); });
+
+      /* Swipe gauche/droite dans la lightbox (mobile) */
+      var lbTouchStartX = 0, lbTouchStartY = 0;
+      overlay.addEventListener('touchstart', function(e) {
+          lbTouchStartX = e.touches[0].clientX;
+          lbTouchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      overlay.addEventListener('touchend', function(e) {
+          var dx = e.changedTouches[0].clientX - lbTouchStartX;
+          var dy = e.changedTouches[0].clientY - lbTouchStartY;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+              if (dx < 0) showImage(currentIndex + 1);
+              else        showImage(currentIndex - 1);
+          }
+      }, { passive: true });
       document.addEventListener('keydown', function(e) {
           if (!overlay.classList.contains('active')) return;
           if (e.key === 'ArrowLeft')  showImage(currentIndex - 1);
