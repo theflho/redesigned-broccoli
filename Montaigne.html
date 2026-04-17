@@ -368,7 +368,7 @@
       max-height: 82vh;
       object-fit: contain;
       border-radius: 16px;
-      transition: opacity 0.1s ease;
+      transition: opacity 0.2s ease;
       display: block;
       pointer-events: none;
   }
@@ -786,29 +786,13 @@ function initSpecs() {
       function showImage(index) {
           var items = getItems();
           currentIndex = (index + items.length) % items.length;
-          lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
-          var img = items[currentIndex].querySelector('img');
-          var newSrc = img ? getImgSrc(img) : '';
           lbImg.classList.add('fade');
           setTimeout(function() {
-              lbImg.style.visibility = 'hidden'; /* cache l'ancienne image sans modifier le layout */
-              lbImg.onload = function() {
-                  lbImg.style.visibility = '';
-                  lbImg.classList.remove('fade');
-                  lbImg.onload = null; lbImg.onerror = null;
-              };
-              lbImg.onerror = function() {
-                  lbImg.style.visibility = '';
-                  lbImg.classList.remove('fade');
-                  lbImg.onerror = null; lbImg.onload = null;
-              };
-              lbImg.src = newSrc;
-              if (lbImg.complete) {
-                  lbImg.style.visibility = '';
-                  lbImg.classList.remove('fade');
-                  lbImg.onload = null; lbImg.onerror = null;
-              }
-          }, 100);
+              var img = items[currentIndex].querySelector('img');
+              lbImg.src = img ? getImgSrc(img) : '';
+              lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
+              lbImg.classList.remove('fade');
+          }, 180);
       }
       var lbScrollY = 0;
       function openLightbox(index) {
