@@ -368,7 +368,7 @@
       max-height: 82vh;
       object-fit: contain;
       border-radius: 16px;
-      transition: opacity 0.15s ease;
+      transition: opacity 0.2s ease;
       display: block;
       pointer-events: none;
   }
@@ -786,24 +786,16 @@ function initSpecs() {
       function showImage(index) {
           var items = getItems();
           currentIndex = (index + items.length) % items.length;
-          lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
-          var img = items[currentIndex].querySelector('img');
-          var newSrc = img ? getImgSrc(img) : '';
-
-          /* Fondu sortant, puis swap instantané (image en cache) */
           lbImg.classList.add('fade');
+          lbImg.src = '';
+          lbCounter.textContent = (currentIndex + 1) + '  /  ' + items.length;
           setTimeout(function() {
+              var img = items[currentIndex].querySelector('img');
+              var newSrc = img ? getImgSrc(img) : '';
+              lbImg.onload = function() { lbImg.classList.remove('fade'); lbImg.onload = null; };
+              lbImg.onerror = function() { lbImg.classList.remove('fade'); lbImg.onerror = null; };
               lbImg.src = newSrc;
-              /* Si déjà en cache : retire le fondu immédiatement */
-              var pre = new Image();
-              pre.src = newSrc;
-              if (pre.complete) {
-                  lbImg.classList.remove('fade');
-              } else {
-                  lbImg.onload = function() { lbImg.classList.remove('fade'); lbImg.onload = null; };
-                  lbImg.onerror = function() { lbImg.classList.remove('fade'); lbImg.onerror = null; };
-              }
-          }, 150);
+          }, 180);
       }
       var lbScrollY = 0;
       function openLightbox(index) {
