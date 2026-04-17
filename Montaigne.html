@@ -745,30 +745,18 @@ function initSpecs() {
           slider.scrollLeft = scrollLeft - walk;
       });
 
-      /* Swipe carrousel — gestion manuelle pour iOS */
-      var touchStartX = 0, touchStartY = 0, touchScrollLeft = 0, isHorizontalSwipe = null;
+      /* Swipe carrousel — natif iOS, juste tracker isDragging pour éviter openLightbox */
+      var touchStartX = 0;
       slider.addEventListener('touchstart', function(e) {
           touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-          touchScrollLeft = slider.scrollLeft;
           isDragging = false;
-          isHorizontalSwipe = null;
       }, { passive: true });
       slider.addEventListener('touchmove', function(e) {
-          var dx = e.touches[0].clientX - touchStartX;
-          var dy = e.touches[0].clientY - touchStartY;
-          if (isHorizontalSwipe === null) {
-              isHorizontalSwipe = Math.abs(dx) > Math.abs(dy);
-          }
-          if (isHorizontalSwipe) {
-              e.preventDefault();
-              slider.scrollLeft = touchScrollLeft - dx;
-              isDragging = true;
-          }
-      }, { passive: false });
+          if (Math.abs(e.touches[0].clientX - touchStartX) > 8) isDragging = true;
+      }, { passive: true });
       slider.addEventListener('touchend', function() {
-          setTimeout(function() { isDragging = false; }, 100);
-      });
+          setTimeout(function() { isDragging = false; }, 200);
+      }, { passive: true });
   
       /* Lightbox */
       var overlay = document.createElement('div');
@@ -813,7 +801,8 @@ function initSpecs() {
           overlay.classList.add('active');
           showImage(index);
       }
-      window.ouvrirGalerie = function() { openLightbox(0); };
+      function isTouchDevice() { return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); }
+      window.ouvrirGalerie = function() { if (!isTouchDevice()) openLightbox(0); };
       function closeLightbox() {
           overlay.classList.remove('active');
           document.body.classList.remove('lb-open');
@@ -830,6 +819,7 @@ function initSpecs() {
           items.forEach(function(item, index) {
               item.addEventListener('click', function(e) {
                   if (isDragging) return;
+                  if (isTouchDevice()) return;
                   e.preventDefault();
                   e.stopImmediatePropagation();
                   openLightbox(index);
