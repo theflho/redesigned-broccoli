@@ -714,7 +714,7 @@ function initSpecs() {
       prevBtn.addEventListener('click', function() { slider.scrollBy({ left: -300, behavior: 'smooth' }); });
       nextBtn.addEventListener('click', function() { slider.scrollBy({ left:  300, behavior: 'smooth' }); });
   
-      /* Drag to scroll */
+      /* Drag to scroll — souris */
       var isDown = false, isDragging = false, startX, scrollLeft;
       slider.addEventListener('mousedown', function(e) {
           isDown = true; isDragging = false;
@@ -730,6 +730,24 @@ function initSpecs() {
           var walk = (e.pageX - slider.offsetLeft - startX) * 2;
           if (Math.abs(walk) > 5) isDragging = true;
           slider.scrollLeft = scrollLeft - walk;
+      });
+
+      /* Swipe to scroll — tactile mobile */
+      var touchStartX = 0, touchScrollLeft = 0;
+      slider.addEventListener('touchstart', function(e) {
+          touchStartX = e.touches[0].clientX;
+          touchScrollLeft = slider.scrollLeft;
+          slider.style.scrollBehavior = 'auto';
+          isDragging = false;
+      }, { passive: true });
+      slider.addEventListener('touchmove', function(e) {
+          var dx = e.touches[0].clientX - touchStartX;
+          if (Math.abs(dx) > 5) isDragging = true;
+          slider.scrollLeft = touchScrollLeft - dx;
+      }, { passive: true });
+      slider.addEventListener('touchend', function() {
+          slider.style.scrollBehavior = 'smooth';
+          setTimeout(function() { isDragging = false; }, 100);
       });
   
       /* Lightbox */
