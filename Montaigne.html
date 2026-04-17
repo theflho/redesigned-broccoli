@@ -614,12 +614,18 @@
   <script>
   /* --- SPECS CONDITIONNELLES --- */
 function initSpecs() {
-    document.querySelectorAll('.item-spec').forEach(function(row) {
+    var rows = document.querySelectorAll('.item-spec');
+    if (!rows.length) { setTimeout(initSpecs, 200); return; }
+    var allEmpty = true;
+    rows.forEach(function(row) {
         var span = row.querySelector('.val-cms');
-        if (span && !span.textContent.trim()) {
-            row.style.display = 'none';
+        if (span) {
+            var val = span.textContent.replace(/\s/g, '');
+            if (val) allEmpty = false;
+            if (!val) row.style.display = 'none';
         }
     });
+    if (allEmpty) { setTimeout(initSpecs, 200); return; }
 }
 
 /* --- PRIX AU M² --- */
