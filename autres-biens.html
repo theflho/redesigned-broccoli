@@ -1,0 +1,167 @@
+<div class="autresbiens-wrap">
+
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;700&display=swap');
+
+  .autresbiens-wrap {
+      width: 100%;
+      background: #f8f5ef;
+      padding: 60px 40px 80px;
+      box-sizing: border-box;
+  }
+
+  /* --- GRILLE --- */
+  .autresbiens-wrap .w-dyn-items {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 32px !important;
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+  }
+
+  .autresbiens-wrap .w-dyn-item {
+      display: block !important;
+  }
+
+  /* --- CARTE --- */
+  .carte-bien {
+      display: block !important;
+      text-decoration: none !important;
+      color: #1a1a1a !important;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .carte-bien:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.10);
+  }
+
+  /* --- IMAGE --- */
+  .img-bien {
+      width: 100% !important;
+      height: 260px !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      display: block !important;
+      transition: transform 0.5s ease !important;
+  }
+  .carte-bien:hover .img-bien {
+      transform: scale(1.03) !important;
+  }
+  .img-bien-wrap {
+      overflow: hidden;
+  }
+
+  /* --- INFOS --- */
+  .carte-bien-infos {
+      padding: 24px 24px 28px;
+  }
+
+  .prix-bien {
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 15px !important;
+      color: #1a1a1a !important;
+      margin-bottom: 10px !important;
+      display: block;
+  }
+
+  .nom-bien {
+      font-family: 'Playfair Display', serif !important;
+      font-size: 22px !important;
+      font-style: italic !important;
+      line-height: 1.25 !important;
+      color: #1a1a1a !important;
+      margin-bottom: 14px !important;
+      display: block;
+  }
+
+  .separateur-bien {
+      width: 40px;
+      height: 1px;
+      background: #c8b3a0;
+      margin-bottom: 14px;
+  }
+
+  .specs-bien {
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.2em !important;
+      text-transform: uppercase !important;
+      color: #635749 !important;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+  }
+
+  .ville-bien {
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 10px !important;
+      letter-spacing: 0.18em !important;
+      text-transform: uppercase !important;
+      color: #c8b3a0 !important;
+      margin-top: 10px !important;
+      display: block;
+  }
+
+  /* --- VIDE --- */
+  .autresbiens-wrap .w-dyn-empty {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      color: #635749;
+      letter-spacing: 0.1em;
+      text-align: center;
+      padding: 60px 0;
+  }
+
+  /* --- TABLETTE --- */
+  @media (max-width: 1100px) {
+      .autresbiens-wrap .w-dyn-items {
+          grid-template-columns: repeat(2, 1fr) !important;
+      }
+  }
+
+  /* --- MOBILE --- */
+  @media (max-width: 640px) {
+      .autresbiens-wrap {
+          padding: 40px 20px 60px;
+      }
+      .autresbiens-wrap .w-dyn-items {
+          grid-template-columns: 1fr !important;
+          gap: 20px !important;
+      }
+      .img-bien {
+          height: 220px !important;
+      }
+  }
+  </style>
+
+  <script>
+  (function() {
+      function formatPrix() {
+          document.querySelectorAll('.prix-bien').forEach(function(el) {
+              var raw = el.textContent.replace(/[^\d]/g, '');
+              if (raw) el.textContent = parseInt(raw).toLocaleString('fr-FR') + ' \u20ac';
+          });
+      }
+
+      function init() {
+          /* Attendre que le CMS soit rendu */
+          var items = document.querySelectorAll('.autresbiens-wrap .w-dyn-item');
+          if (!items.length) { setTimeout(init, 300); return; }
+          formatPrix();
+      }
+
+      if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', init);
+      } else {
+          init();
+      }
+  })();
+  </script>
+
+</div>
