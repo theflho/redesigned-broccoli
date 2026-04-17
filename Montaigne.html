@@ -791,10 +791,23 @@ function initSpecs() {
           var newSrc = img ? getImgSrc(img) : '';
           lbImg.classList.add('fade');
           setTimeout(function() {
-              lbImg.onload = function() { lbImg.classList.remove('fade'); lbImg.onload = null; lbImg.onerror = null; };
-              lbImg.onerror = function() { lbImg.classList.remove('fade'); lbImg.onerror = null; lbImg.onload = null; };
+              lbImg.style.visibility = 'hidden'; /* cache l'ancienne image sans modifier le layout */
+              lbImg.onload = function() {
+                  lbImg.style.visibility = '';
+                  lbImg.classList.remove('fade');
+                  lbImg.onload = null; lbImg.onerror = null;
+              };
+              lbImg.onerror = function() {
+                  lbImg.style.visibility = '';
+                  lbImg.classList.remove('fade');
+                  lbImg.onerror = null; lbImg.onload = null;
+              };
               lbImg.src = newSrc;
-              if (lbImg.complete) { lbImg.classList.remove('fade'); lbImg.onload = null; lbImg.onerror = null; }
+              if (lbImg.complete) {
+                  lbImg.style.visibility = '';
+                  lbImg.classList.remove('fade');
+                  lbImg.onload = null; lbImg.onerror = null;
+              }
           }, 100);
       }
       var lbScrollY = 0;
