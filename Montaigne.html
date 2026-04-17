@@ -592,6 +592,9 @@
   }
   .btn-georisques:hover { border-color: #1a1a1a; color: #1a1a1a; }
   
+  /* --- LIGHTBOX SCROLL LOCK (iOS) --- */
+  body.lb-open { overflow: hidden !important; position: fixed !important; width: 100% !important; top: var(--lb-scroll-top, 0) !important; }
+
   /* --- TABLETTE --- */
   @media (min-width: 992px) and (max-width: 1200px) {
       .nom-propriete { font-size: 46px; }
@@ -789,15 +792,20 @@ function initSpecs() {
               lbImg.classList.remove('fade');
           }, 180);
       }
+      var lbScrollY = 0;
       function openLightbox(index) {
+          lbScrollY = window.scrollY || window.pageYOffset;
+          document.documentElement.style.setProperty('--lb-scroll-top', '-' + lbScrollY + 'px');
+          document.body.classList.add('lb-open');
           overlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
           showImage(index);
       }
       window.ouvrirGalerie = function() { openLightbox(0); };
       function closeLightbox() {
           overlay.classList.remove('active');
-          document.body.style.overflow = '';
+          document.body.classList.remove('lb-open');
+          document.documentElement.style.removeProperty('--lb-scroll-top');
+          window.scrollTo(0, lbScrollY);
       }
   
       function attachClicks() {
