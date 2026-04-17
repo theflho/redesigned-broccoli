@@ -299,6 +299,8 @@
       flex: 0 0 320px !important;
       height: 460px !important;
       cursor: pointer !important;
+      overflow: hidden !important;
+      position: relative !important;
   }
   
   .liste-capsule-flux .w-dyn-item a,
@@ -323,6 +325,12 @@
   .liste-capsule-flux .w-dyn-item:hover .img-capsule-luxe {
       transform: scale(0.98) !important;
       box-shadow: 0 16px 40px rgba(0,0,0,0.15) !important;
+  }
+  @media (hover: none) {
+      .liste-capsule-flux .w-dyn-item:hover .img-capsule-luxe {
+          transform: none !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important;
+      }
   }
   
   .carrousel-arrow {
