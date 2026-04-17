@@ -283,6 +283,8 @@
       user-select: none;
       scroll-behavior: smooth;
       padding: 4px 0 8px !important;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
   }
   .liste-capsule-flux::-webkit-scrollbar { display: none !important; }
   .liste-capsule-flux:active { cursor: grabbing !important; }
@@ -359,6 +361,8 @@
       display: none;
       align-items: center;
       justify-content: center;
+      touch-action: none;
+      overscroll-behavior: none;
   }
   #lb-overlay.active { display: flex; animation: lbFadeIn 0.35s ease; }
   @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -741,15 +745,27 @@ function initSpecs() {
           slider.scrollLeft = scrollLeft - walk;
       });
 
-      /* Swipe carrousel — on laisse le scroll natif iOS faire son travail */
-      var touchStartX = 0;
+      /* Swipe carrousel — gestion manuelle pour iOS */
+      var touchStartX = 0, touchStartY = 0, touchScrollLeft = 0, isHorizontalSwipe = null;
       slider.addEventListener('touchstart', function(e) {
           touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchScrollLeft = slider.scrollLeft;
           isDragging = false;
+          isHorizontalSwipe = null;
       }, { passive: true });
       slider.addEventListener('touchmove', function(e) {
-          if (Math.abs(e.touches[0].clientX - touchStartX) > 5) isDragging = true;
-      }, { passive: true });
+          var dx = e.touches[0].clientX - touchStartX;
+          var dy = e.touches[0].clientY - touchStartY;
+          if (isHorizontalSwipe === null) {
+              isHorizontalSwipe = Math.abs(dx) > Math.abs(dy);
+          }
+          if (isHorizontalSwipe) {
+              e.preventDefault();
+              slider.scrollLeft = touchScrollLeft - dx;
+              isDragging = true;
+          }
+      }, { passive: false });
       slider.addEventListener('touchend', function() {
           setTimeout(function() { isDragging = false; }, 100);
       });
